@@ -11,11 +11,34 @@
                 document.getElementById("result").innerHTML = result
                 //return result
             }
+            function insertIn(ch) {
+                document.getElementById("ecuation").value += ch
+            }
+            function del() {
+                document.getElementById("ecuation").value = document.getElementById("ecuation").value.substring(0, document.getElementById("ecuation").value.length - 1)
+            }
         </script>
     </head>
     <body>
-        <textarea id="ecuation" name="ecuation" rows="4" cols="50" inputmode="numeric"></textarea>
+        <textarea id="ecuation" name="ecuation" rows="4" cols="50" inputmode="none"></textarea>
         <button type="button" onclick="myEv()">Calculate</button>
         <div id="result"></div>
+        <div id="controls">
+            <button type="button" onclick="insertIn('0')">0</button>
+            <button type="button" onclick="insertIn('1')">1</button>
+            <button type="button" onclick="insertIn('2')">2</button>
+            <button type="button" onclick="insertIn('3')">3</button>
+            <button type="button" onclick="insertIn('4')">4</button>
+            <button type="button" onclick="insertIn('5')">5</button>
+            <button type="button" onclick="insertIn('6')">6</button>
+            <button type="button" onclick="insertIn('.')">.</button>
+            <button type="button" onclick="insertIn('+')">+</button>
+            <button type="button" onclick="insertIn('-')">-</button>
+            <button type="button" onclick="insertIn('*')">*</button>
+            <button type="button" onclick="insertIn('/')">/</button>
+            <button type="button" onclick="insertIn('(')">(</button>
+            <button type="button" onclick="insertIn(')')">)</button>
+            <button type="button" onclick="del()">bs</button>
+        </div>
     </body>
 </html>
