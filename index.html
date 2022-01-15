@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <script>
+            function myEv(){
+                console.log("evaluating")
+                let expression = document.getElementById("ecuation").value
+                let result = Function('"use strict";return (' + expression + ')')()
+                console.log(result)
+                document.getElementById("result").innerHTML = result
+                //return result
+            }
+        </script>
+    </head>
+    <body>
+        <textarea id="ecuation" name="ecuation" rows="4" cols="50" inputmode="numeric"></textarea>
+        <button type="button" onclick="myEv()">Calculate</button>
+        <div id="result"></div>
+    </body>
+</html>
