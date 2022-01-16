@@ -24,7 +24,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/",
+  "start_url": "https://chronicweirdo.github.io/calculator/",
   "display": "standalone",
   "theme_color": "#1a1a1a"
 }
