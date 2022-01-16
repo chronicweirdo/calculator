@@ -100,11 +100,20 @@
                 b.onclick = func
                 return b
             }
+            function getMemoryNameInput(v) {
+                let input = document.createElement("input")
+                input.value = v.name
+                input.onchange = () => {
+                    v.name = input.value
+                    window.localStorage.setItem(v.eq, JSON.stringify(v))
+                }
+                return input
+            }
             function getRow(v) {
                 let tr = document.createElement("tr")
                 
                 let n = document.createElement("td")
-                n.innerHTML = v.name
+                n.appendChild(getMemoryNameInput(v))
                 tr.appendChild(n)
 
                 let e = document.createElement("td")
