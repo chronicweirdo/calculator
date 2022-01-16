@@ -54,26 +54,41 @@
                 }
                 eq.focus()
             }
+            function left() {
+                let eq = document.getElementById("equation")
+                let start = eq.selectionStart
+                if (start > 0) {
+                    eq.selectionStart = start-1
+                    eq.selectionEnd = start-1
+                }
+                eq.focus()
+            }
+            function right() {
+                let eq = document.getElementById("equation")
+                let end = eq.selectionEnd
+                if (end < eq.value.length) {
+                    eq.selectionStart = end+1
+                    eq.selectionEnd = end+1
+                }
+                eq.focus()
+            }
+            function memSave() {
+                let equation = document.getElementById("equation").value
+                let result = document.getElementById("result").innerHTML
+                if (result != "?") {
+                    // save this value
+                    // window.localStorage.setItem(this.name, this.encoder(value))
+                }
+            }
             function cls() {
                 let eq = document.getElementById("equation")
                 eq.value = ""
                 eq.focus()
             }
             function resize() {
-                let controls = document.getElementById("controls")
-                let equation = document.getElementById("equation")
-                let vw = getViewportWidth()
-                let vh = getViewportHeight()
-                let ch = controls.clientHeight
-                let eh = vh - ch
-                console.log(vw + " " + vh + " " + ch + " " + eh)
-                equation.style.width = (vw - 2) + "px"
-                equation.style.height = (eh - 10 - 20) + "px"
+                document.getElementById("controls").style.height = (getViewportHeight() - 20) + "px"
             }
             window.onload = function() {
-                /*let c = document.getElementById("controls")
-                c.style.width = getViewportWidth() + "px"
-                c.style.height = getViewportHeight() + "px"*/
                 resize()
                 calculate()
             }
@@ -81,7 +96,7 @@
         </script>
         <style>
             * {
-                font-size: 5vw;
+                font-size: 5vmin;
                 padding: 0;
                 margin: 0;
                 touch-action: manipulation;
@@ -96,14 +111,16 @@
                 left: 0;
                 width: 100%;
                 grid-template-columns: repeat(4, 25%);
-                grid-template-rows: repeat(6, 10vw);
+                grid-template-rows: 65% repeat(7, 5%);
                 grid-template-areas: 
+                    'eqa eqa eqa eqa'
                     'equ res res res'
-                    'cls pop pcl div'
-                    'b7 b8 b9 mul'
-                    'b4 b5 b6 min'
-                    'b1 b2 b3 pls'
-                    'b0 b0 pt bsp'
+                    'cls lef rig bsp'
+                    'mps mem pop pcl'
+                    'b7 b8 b9 div'
+                    'b4 b5 b6 mul'
+                    'b1 b2 b3 min'
+                    'b0 b0 pt pls'
                     ;
             }
             #controls > * {
@@ -121,10 +138,13 @@
         </style>
     </head>
     <body>
-        <textarea id="equation" name="equation" inputmode="none" onchange="calculate()" onkeyup="calculate()" onfocus="calculate()"></textarea>
+        
         <div id="controls">
+            <textarea style="grid-area: eqa" id="equation" name="equation" inputmode="none" onchange="calculate()" onkeyup="calculate()" onfocus="calculate()"></textarea>
+
             <button style="grid-area: equ" id="equals" onclick="calculate()">=</button>
             <span style="grid-area: res" id="result"></span>
+
             <button style="grid-area: b0" type="button" onclick="insert('0')">0</button>
             <button style="grid-area: b1" type="button" onclick="insert('1')">1</button>
             <button style="grid-area: b2" type="button" onclick="insert('2')">2</button>
@@ -142,8 +162,13 @@
             <button style="grid-area: div" type="button" onclick="insert('/')">/</button>
             <button style="grid-area: pop" type="button" onclick="insert('(')">(</button>
             <button style="grid-area: pcl" type="button" onclick="insert(')')">)</button>
-            <button style="grid-area: bsp" type="button" onclick="backspace()">↼</button>
+            <button style="grid-area: bsp" type="button" onclick="backspace()">⤆</button>
             <button style="grid-area: cls" type="button" onclick="cls()">C</button>
+
+            <button style="grid-area: lef" type="button" onclick="left()">←</button>
+            <button style="grid-area: rig" type="button" onclick="right()">→</button>
+            <button style="grid-area: mps" type="button" onclick="memSave()">M+</button>
+            <button style="grid-area: mem" type="button" onclick="mem()">M</button>
         </div>
     </body>
 </html>
