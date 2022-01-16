@@ -12,10 +12,30 @@
                 //return result
             }
             function insertIn(ch) {
-                document.getElementById("ecuation").value += ch
+                let eq = document.getElementById("ecuation")
+                let currentVal = eq.value
+                let start = eq.selectionStart
+                let end = eq.selectionEnd
+                eq.value = currentVal.slice(0, start) + ch + currentVal.slice(end)
+                eq.focus()
+                eq.selectionStart = start+1
+                eq.selectionEnd = start+1
             }
             function del() {
-                document.getElementById("ecuation").value = document.getElementById("ecuation").value.substring(0, document.getElementById("ecuation").value.length - 1)
+                let eq = document.getElementById("ecuation")
+                let currentVal = eq.value
+                let start = eq.selectionStart
+                let end = eq.selectionEnd
+                if (start == end && start > 0) {
+                    eq.value = currentVal.slice(0, start-1) + currentVal.slice(end)
+                    eq.selectionStart = start-1
+                    eq.selectionEnd = start-1
+                } else {
+                    eq.value = currentVal.slice(0, start) + currentVal.slice(end)
+                    eq.selectionStart = start
+                    eq.selectionEnd = start
+                }
+                eq.focus()
             }
         </script>
     </head>
