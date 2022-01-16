@@ -112,34 +112,27 @@
                 }
                 return input
             }
-            function wrapWithTd(element) {
-                let td = document.createElement("td")
-                td.appendChild(element)
-                return td
-            }
             function addRows(table, v) {
-                let nameRow = document.createElement("tr")
-                nameRow.appendChild(wrapWithTd(getMemoryNameInput(v)))
-                nameRow.appendChild(wrapWithTd(but("x", () => memDelete(v.eq))))
-                table.appendChild(nameRow)
-                
-                let dataRow = document.createElement("tr")
-                dataRow.appendChild(wrapWithTd(but(v.eq, () => {
+                table.appendChild(getMemoryNameInput(v))
+                table.appendChild(but("x", () => memDelete(v.eq)))
+                table.appendChild(but(v.eq, () => {
                     hideMem()
                     insert(v.eq)
-                })))
-                dataRow.appendChild(wrapWithTd(but(v.res, () => {
+                }))
+                table.appendChild(but(v.res, () => {
                     hideMem()
                     insert(v.res)
-                })))
-                table.appendChild(dataRow)
+                }))
+                table.appendChild(getSpace())
+                table.appendChild(getSpace())
             }
             function getEndRow() {
-                let tr = document.createElement("tr")
-                let n = document.createElement("td")
-                n.appendChild(but("x", () => hideMem()))
-                tr.appendChild(n)
-                return tr
+                return but("x", () => hideMem())
+            }
+            function getSpace() {
+                let space = document.createElement("span")
+                space.classList.add("space")
+                return space
             }
             function getMemoryArray() {
                 let keys = Object.keys(window.localStorage)
@@ -154,11 +147,16 @@
             function mem() {
                 let m = document.getElementById("mem")
                 m.innerHTML = ""
-                getMemoryArray().forEach(v => addRows(m, v))
-                m.appendChild(getEndRow())
-                m.style.display = "block"
-                let c = document.getElementById("controls")
-                c.style.display = "none"
+                let memoryArray = getMemoryArray()
+                if (memoryArray.length > 0) {
+                    memoryArray.forEach(v => addRows(m, v))
+                    m.appendChild(getEndRow())
+                    m.style.display = "grid"
+                    let c = document.getElementById("controls")
+                    c.style.display = "none"
+                } else {
+                    hideMem()
+                }
             }
             function hideMem() {
                 let m = document.getElementById("mem")
@@ -226,9 +224,13 @@
             #mem {
                 display: none;
                 word-break: break-all;
+                grid-template-columns: 75% 25%;
             }
-            td {
-                border: 1px solid black;
+            #mem > * {
+                width: 100%;
+            }
+            #mem > .space {
+                height: 20px;
             }
         </style>
     </head>
@@ -264,7 +266,7 @@
             <button style="grid-area: mps" type="button" onclick="memSave()">M+</button>
             <button style="grid-area: mem" type="button" onclick="mem()">M</button>
         </div>
-        <table id="mem">
-        </table>
+        <div id="mem">
+        </div>
     </body>
 </html>
