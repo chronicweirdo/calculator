@@ -7,7 +7,7 @@
           content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, height=device-height">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="theme-color" content="#df005e">
+        <meta name="theme-color" content="#1a1a1a">
         <script>
             function getViewportWidth() {
                 return Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
@@ -191,6 +191,9 @@
                 padding: 0;
                 margin: 0;
                 touch-action: manipulation;
+            }
+            *:focus {
+                outline: none;
             }
 
             #controls {
