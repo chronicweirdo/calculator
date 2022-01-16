@@ -72,8 +72,7 @@
                 }
                 eq.focus()
             }
-            function getNowName() {
-                let d = new Date()
+            function dateToString(d) {
                 return d.getFullYear() + "/" + d.getMonth() + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes()
             }
             function memDelete(k) {
@@ -83,13 +82,15 @@
             function memSave() {
                 let equation = document.getElementById("equation").value
                 let result = document.getElementById("result").innerHTML
-                let name = getNowName()
+                let date = new Date()
+                let name = dateToString(date)
                 if (result != "?") {
                     // save this value
                     let val = {
                         eq: equation,
                         res: result,
-                        name: name
+                        name: name,
+                        ts: date.getTime()
                     }
                     window.localStorage.setItem(equation, JSON.stringify(val))
                 }
@@ -104,37 +105,34 @@
                 let input = document.createElement("input")
                 input.value = v.name
                 input.onchange = () => {
-                    v.name = input.value
-                    window.localStorage.setItem(v.eq, JSON.stringify(v))
+                    if (input.value.length > 0) {
+                        v.name = input.value
+                        window.localStorage.setItem(v.eq, JSON.stringify(v))
+                    }
                 }
                 return input
             }
-            function getRow(v) {
-                let tr = document.createElement("tr")
+            function wrapWithTd(element) {
+                let td = document.createElement("td")
+                td.appendChild(element)
+                return td
+            }
+            function addRows(table, v) {
+                let nameRow = document.createElement("tr")
+                nameRow.appendChild(wrapWithTd(getMemoryNameInput(v)))
+                nameRow.appendChild(wrapWithTd(but("x", () => memDelete(v.eq))))
+                table.appendChild(nameRow)
                 
-                let n = document.createElement("td")
-                n.appendChild(getMemoryNameInput(v))
-                tr.appendChild(n)
-
-                let e = document.createElement("td")
-                e.appendChild(but(v.eq, () => {
+                let dataRow = document.createElement("tr")
+                dataRow.appendChild(wrapWithTd(but(v.eq, () => {
                     hideMem()
                     insert(v.eq)
-                }))
-                tr.appendChild(e)
-
-                let r = document.createElement("td")
-                r.appendChild(but(v.res, () => {
+                })))
+                dataRow.appendChild(wrapWithTd(but(v.res, () => {
                     hideMem()
                     insert(v.res)
-                }))
-                tr.appendChild(r)
-
-                let d = document.createElement("td")
-                d.appendChild(but("x", () => memDelete(v.eq)))
-                tr.appendChild(d)
-
-                return tr
+                })))
+                table.appendChild(dataRow)
             }
             function getEndRow() {
                 let tr = document.createElement("tr")
@@ -143,16 +141,20 @@
                 tr.appendChild(n)
                 return tr
             }
+            function getMemoryArray() {
+                let keys = Object.keys(window.localStorage)
+                let items = []
+                for (k in keys) {
+                    let v = JSON.parse(window.localStorage.getItem(keys[k]))
+                    items.push(v)
+                }
+                items.sort((a, b) => a.ts - b.ts)
+                return items
+            }
             function mem() {
                 let m = document.getElementById("mem")
                 m.innerHTML = ""
-                let keys = Object.keys(window.localStorage)
-                for (k in keys) {
-                    let v = JSON.parse(window.localStorage.getItem(keys[k]))
-                    console.log(v)
-                    let tr =getRow(v)
-                    m.appendChild(tr)
-                }
+                getMemoryArray().forEach(v => addRows(m, v))
                 m.appendChild(getEndRow())
                 m.style.display = "block"
                 let c = document.getElementById("controls")
