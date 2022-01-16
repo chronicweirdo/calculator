@@ -35,8 +35,8 @@
                 let end = eq.selectionEnd
                 eq.value = currentVal.slice(0, start) + ch + currentVal.slice(end)
                 eq.focus()
-                eq.selectionStart = start+1
-                eq.selectionEnd = start+1
+                eq.selectionStart = start+ch.length
+                eq.selectionEnd = start+ch.length
             }
             function backspace() {
                 let eq = document.getElementById("equation")
@@ -76,6 +76,10 @@
                 let d = new Date()
                 return d.getFullYear() + "/" + d.getMonth() + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes()
             }
+            function memDelete(k) {
+                window.localStorage.removeItem(k)
+                mem()
+            }
             function memSave() {
                 let equation = document.getElementById("equation").value
                 let result = document.getElementById("result").innerHTML
@@ -90,6 +94,12 @@
                     window.localStorage.setItem(equation, JSON.stringify(val))
                 }
             }
+            function but(text, func) {
+                let b = document.createElement("button")
+                b.innerHTML = text
+                b.onclick = func
+                return b
+            }
             function getRow(v) {
                 let tr = document.createElement("tr")
                 
@@ -98,13 +108,30 @@
                 tr.appendChild(n)
 
                 let e = document.createElement("td")
-                e.innerHTML = v.eq
+                e.appendChild(but(v.eq, () => {
+                    hideMem()
+                    insert(v.eq)
+                }))
                 tr.appendChild(e)
 
                 let r = document.createElement("td")
-                r.innerHTML = v.res
+                r.appendChild(but(v.res, () => {
+                    hideMem()
+                    insert(v.res)
+                }))
                 tr.appendChild(r)
 
+                let d = document.createElement("td")
+                d.appendChild(but("x", () => memDelete(v.eq)))
+                tr.appendChild(d)
+
+                return tr
+            }
+            function getEndRow() {
+                let tr = document.createElement("tr")
+                let n = document.createElement("td")
+                n.appendChild(but("x", () => hideMem()))
+                tr.appendChild(n)
                 return tr
             }
             function mem() {
@@ -117,9 +144,17 @@
                     let tr =getRow(v)
                     m.appendChild(tr)
                 }
+                m.appendChild(getEndRow())
                 m.style.display = "block"
                 let c = document.getElementById("controls")
                 c.style.display = "none"
+            }
+            function hideMem() {
+                let m = document.getElementById("mem")
+                m.style.display = "none"
+                let c = document.getElementById("controls")
+                c.style.display = "grid"
+                document.getElementById("equation").focus()
             }
             function cls() {
                 let eq = document.getElementById("equation")
@@ -148,9 +183,7 @@
                 margin: 0;
                 touch-action: manipulation;
             }
-            body {
-                overflow: hidden;
-            }
+
             #controls {
                 display: grid;
                 grid-template-columns: repeat(4, 25%);
@@ -180,6 +213,7 @@
             }
             #mem {
                 display: none;
+                word-break: break-all;
             }
             td {
                 border: 1px solid black;
