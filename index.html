@@ -73,7 +73,12 @@
                 eq.focus()
             }
             function dateToString(d) {
-                return d.getFullYear() + "/" + d.getMonth() + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes()
+                let year = d.getFullYear()
+                let month = d.getMonth() < 9 ? "0" + (d.getMonth() + 1) : d.getMonth() + 1
+                let day = d.getDate() < 10 ? "0" + d.getDate() : d.getDate()
+                let hour = d.getHours() < 10 ? "0" + d.getHours() : d.getHours()
+                let minute = d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes()
+                return year + "/" + month + "/" + day + " " + hour + ":" + minute
             }
             function memDelete(k) {
                 window.localStorage.removeItem(k)
@@ -179,6 +184,11 @@
                 let m = document.getElementById("mem")
                 m.style.width = (getViewportWidth() - pad * 2) + "px"
             }
+            function toClipboard() {
+                calculate()
+                navigator.clipboard.writeText(document.getElementById("result").innerHTML)
+                document.getElementById("equation").focus()
+            }
             window.onload = function() {
                 resize()
                 calculate()
@@ -187,7 +197,7 @@
         </script>
         <style>
             * {
-                font-size: 5vmin;
+                font-size: 3vmax;
                 padding: 0;
                 margin: 0;
                 touch-action: manipulation;
@@ -211,8 +221,26 @@
                     'b0 b0 pt pls'
                     ;
             }
-            #controls > * {
-                border: 1px solid white;
+
+            @media (orientation: landscape)
+            {
+                #controls {
+                    grid-template-columns: 60% repeat(4, 10%);
+                    grid-template-rows: repeat(8, auto);
+                    grid-template-areas: 
+                        'eqa equ res res res'
+                        'eqa cls lef rig bsp'
+                        'eqa mps mem pop pcl'
+                        'eqa b7 b8 b9 div'
+                        'eqa b4 b5 b6 mul'
+                        'eqa b1 b2 b3 min'
+                        'eqa b0 b0 pt pls'
+                        ;
+                }
+            }
+
+            #controls > *, #mem > * {
+                border: 2px solid white;
             }
             #equation, #equation:focus, #equation:focus-visible {
                 resize: none;
@@ -222,7 +250,10 @@
             }
             #result {
                 text-align: center;
-                padding-top: 2.5vmin
+                top: 25%;
+                display: inline-block;
+                width: 100%;
+                position: relative;
             }
             #mem {
                 display: none;
@@ -241,8 +272,10 @@
         <div id="controls">
             <textarea style="grid-area: eqa" id="equation" name="equation" inputmode="none" onchange="calculate()" onkeyup="calculate()" onfocus="calculate()"></textarea>
 
-            <button style="grid-area: equ" id="equals" onclick="calculate()">=</button>
-            <span style="grid-area: res" id="result"></span>
+            <button style="grid-area: equ" id="equals" onclick="toClipboard()">=</button>
+            <span style="grid-area: res" id="resultWrapper">
+                <span id="result"></span>
+            </span>
 
             <button style="grid-area: b0" type="button" onclick="insert('0')">0</button>
             <button style="grid-area: b1" type="button" onclick="insert('1')">1</button>
