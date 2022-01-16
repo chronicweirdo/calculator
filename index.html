@@ -3,6 +3,11 @@
     <head>
         <meta charset="utf-8"/>
         <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <meta name="viewport"
+          content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, height=device-height">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="theme-color" content="#df005e">
         <script>
             function getViewportWidth() {
                 return Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
@@ -89,7 +94,7 @@
                 bottom: 0;
                 left: 0;
                 width: 100%;
-                grid-template-columns: repeat(4, auto);
+                grid-template-columns: repeat(4, 25%);
                 grid-template-rows: repeat(6, 10vw);
                 grid-template-areas: 
                     'equ res res res'
