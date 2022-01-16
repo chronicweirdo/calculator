@@ -72,13 +72,54 @@
                 }
                 eq.focus()
             }
+            function getNowName() {
+                let d = new Date()
+                return d.getFullYear() + "/" + d.getMonth() + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes()
+            }
             function memSave() {
                 let equation = document.getElementById("equation").value
                 let result = document.getElementById("result").innerHTML
+                let name = getNowName()
                 if (result != "?") {
                     // save this value
-                    // window.localStorage.setItem(this.name, this.encoder(value))
+                    let val = {
+                        eq: equation,
+                        res: result,
+                        name: name
+                    }
+                    window.localStorage.setItem(equation, JSON.stringify(val))
                 }
+            }
+            function getRow(v) {
+                let tr = document.createElement("tr")
+                
+                let n = document.createElement("td")
+                n.innerHTML = v.name
+                tr.appendChild(n)
+
+                let e = document.createElement("td")
+                e.innerHTML = v.eq
+                tr.appendChild(e)
+
+                let r = document.createElement("td")
+                r.innerHTML = v.res
+                tr.appendChild(r)
+
+                return tr
+            }
+            function mem() {
+                let m = document.getElementById("mem")
+                m.innerHTML = ""
+                let keys = Object.keys(window.localStorage)
+                for (k in keys) {
+                    let v = JSON.parse(window.localStorage.getItem(keys[k]))
+                    console.log(v)
+                    let tr =getRow(v)
+                    m.appendChild(tr)
+                }
+                m.style.display = "block"
+                let c = document.getElementById("controls")
+                c.style.display = "none"
             }
             function cls() {
                 let eq = document.getElementById("equation")
@@ -86,7 +127,13 @@
                 eq.focus()
             }
             function resize() {
-                document.getElementById("controls").style.height = (getViewportHeight() - 20) + "px"
+                let pad = 20
+                document.body.style.padding = pad + "px"
+                let c = document.getElementById("controls")
+                c.style.height = (getViewportHeight() - pad * 2) + "px"
+                c.style.width = (getViewportWidth() - pad * 2) + "px"
+                let m = document.getElementById("mem")
+                m.style.width = (getViewportWidth() - pad * 2) + "px"
             }
             window.onload = function() {
                 resize()
@@ -106,10 +153,6 @@
             }
             #controls {
                 display: grid;
-                position: absolute;
-                bottom: 20px;
-                left: 0;
-                width: 100%;
                 grid-template-columns: repeat(4, 25%);
                 grid-template-rows: 65% repeat(7, 5%);
                 grid-template-areas: 
@@ -124,7 +167,7 @@
                     ;
             }
             #controls > * {
-                border: 1px solid black;
+                border: 1px solid white;
             }
             #equation, #equation:focus, #equation:focus-visible {
                 resize: none;
@@ -135,10 +178,15 @@
             #result {
                 text-align: center;
             }
+            #mem {
+                display: none;
+            }
+            td {
+                border: 1px solid black;
+            }
         </style>
     </head>
     <body>
-        
         <div id="controls">
             <textarea style="grid-area: eqa" id="equation" name="equation" inputmode="none" onchange="calculate()" onkeyup="calculate()" onfocus="calculate()"></textarea>
 
@@ -170,5 +218,7 @@
             <button style="grid-area: mps" type="button" onclick="memSave()">M+</button>
             <button style="grid-area: mem" type="button" onclick="mem()">M</button>
         </div>
+        <table id="mem">
+        </table>
     </body>
 </html>
