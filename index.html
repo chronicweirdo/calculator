@@ -213,8 +213,8 @@
                 grid-template-areas: 
                     'eqa eqa eqa eqa'
                     'equ res res res'
-                    'cls lef rig bsp'
-                    'mps mem pop pcl'
+                    'cls lef rig mps'
+                    'bsp pop pcl mem'
                     'b7 b8 b9 div'
                     'b4 b5 b6 mul'
                     'b1 b2 b3 min'
@@ -226,11 +226,11 @@
             {
                 #controls {
                     grid-template-columns: 60% repeat(4, 10%);
-                    grid-template-rows: repeat(8, auto);
+                    grid-template-rows: repeat(7, auto);
                     grid-template-areas: 
                         'eqa equ res res res'
-                        'eqa cls lef rig bsp'
-                        'eqa mps mem pop pcl'
+                        'eqa cls lef rig mps'
+                        'eqa bsp pop pcl mem'
                         'eqa b7 b8 b9 div'
                         'eqa b4 b5 b6 mul'
                         'eqa b1 b2 b3 min'
@@ -288,19 +288,19 @@
             <button style="grid-area: b8" type="button" onclick="insert('8')">8</button>
             <button style="grid-area: b9" type="button" onclick="insert('9')">9</button>
             <button style="grid-area: pt" type="button" onclick="insert('.')">.</button>
-            <button style="grid-area: pls" type="button" onclick="insert('+')">+</button>
-            <button style="grid-area: min" type="button" onclick="insert('-')">-</button>
-            <button style="grid-area: mul" type="button" onclick="insert('*')">*</button>
-            <button style="grid-area: div" type="button" onclick="insert('/')">/</button>
+            <button style="grid-area: pls" class="operation" type="button" onclick="insert('+')">+</button>
+            <button style="grid-area: min" class="operation" type="button" onclick="insert('-')">-</button>
+            <button style="grid-area: mul" class="operation" type="button" onclick="insert('*')">*</button>
+            <button style="grid-area: div" class="operation" type="button" onclick="insert('/')">/</button>
             <button style="grid-area: pop" type="button" onclick="insert('(')">(</button>
             <button style="grid-area: pcl" type="button" onclick="insert(')')">)</button>
-            <button style="grid-area: bsp" type="button" onclick="backspace()">⤆</button>
-            <button style="grid-area: cls" type="button" onclick="cls()">C</button>
+            <button style="grid-area: bsp" class="delete" type="button" onclick="backspace()">⤆</button>
+            <button style="grid-area: cls" class="delete" type="button" onclick="cls()">C</button>
 
             <button style="grid-area: lef" type="button" onclick="left()">←</button>
             <button style="grid-area: rig" type="button" onclick="right()">→</button>
-            <button style="grid-area: mps" type="button" onclick="memSave()">M+</button>
-            <button style="grid-area: mem" type="button" onclick="mem()">M</button>
+            <button style="grid-area: mps" class="memory" type="button" onclick="memSave()">M+</button>
+            <button style="grid-area: mem" class="memory" type="button" onclick="mem()">M</button>
         </div>
         <div id="mem">
         </div>
