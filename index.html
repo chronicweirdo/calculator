@@ -68,7 +68,7 @@
                 let eh = vh - ch
                 console.log(vw + " " + vh + " " + ch + " " + eh)
                 equation.style.width = (vw - 2) + "px"
-                equation.style.height = (eh-10) + "px"
+                equation.style.height = (eh - 10 - 20) + "px"
             }
             window.onload = function() {
                 /*let c = document.getElementById("controls")
@@ -92,7 +92,7 @@
             #controls {
                 display: grid;
                 position: absolute;
-                bottom: 0;
+                bottom: 20px;
                 left: 0;
                 width: 100%;
                 grid-template-columns: repeat(4, 25%);
@@ -109,10 +109,11 @@
             #controls > * {
                 border: 1px solid black;
             }
-            #equation {
+            #equation, #equation:focus, #equation:focus-visible {
                 resize: none;
                 border: 0;
                 inset: 0;
+                outline: none;
             }
             #result {
                 text-align: center;
@@ -120,7 +121,7 @@
         </style>
     </head>
     <body>
-        <textarea style="grid-area: eqa" id="equation" name="equation" inputmode="none" onchange="calculate()" onkeyup="calculate()" onfocus="calculate()"></textarea>
+        <textarea id="equation" name="equation" inputmode="none" onchange="calculate()" onkeyup="calculate()" onfocus="calculate()"></textarea>
         <div id="controls">
             <button style="grid-area: equ" id="equals" onclick="calculate()">=</button>
             <span style="grid-area: res" id="result"></span>
