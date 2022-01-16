@@ -205,6 +205,25 @@
             *:focus {
                 outline: none;
             }
+            
+            @media (prefers-color-scheme: light) {
+                body {
+                    background-color: white;
+                    color: black;
+                }
+                #controls > *, #mem > * {
+                    border: 2px solid white;
+                }
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background-color: black;
+                    color: white;
+                }
+                #controls > *, #mem > * {
+                    border: 2px solid black;
+                }
+            }
 
             #controls {
                 display: grid;
@@ -239,9 +258,7 @@
                 }
             }
 
-            #controls > *, #mem > * {
-                border: 2px solid white;
-            }
+            
             #equation, #equation:focus, #equation:focus-visible {
                 resize: none;
                 border: 0;
@@ -275,7 +292,7 @@
                 color: black;
             }
             .delete {
-                background-color: #b90000;
+                background-color: #ff3c3c;
                 color: black;
             }
         </style>
