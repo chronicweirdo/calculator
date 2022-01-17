@@ -206,10 +206,15 @@
                 let m = document.getElementById("mem")
                 m.style.width = (getViewportWidth() - pad * 2) + "px"
             }
-            function toClipboard() {
+            function equalsAction() {
                 calculate()
-                navigator.clipboard.writeText(document.getElementById("result").innerHTML)
-                document.getElementById("equation").focus()
+                let result = document.getElementById("result").innerHTML
+                if (result == "?") {
+                    window.location.reload()
+                } else {
+                    navigator.clipboard.writeText(document.getElementById("result").innerHTML)
+                    document.getElementById("equation").focus()
+                }
             }
             window.onload = function() {
                 resize()
@@ -345,7 +350,7 @@
         <div id="controls">
             <textarea style="grid-area: eqa" id="equation" name="equation" inputmode="none" onchange="calculate()" onkeyup="calculate()" onfocus="calculate()"></textarea>
 
-            <button style="grid-area: equ" id="equals" onclick="toClipboard()">=</button>
+            <button style="grid-area: equ" id="equals" onclick="equalsAction()">=</button>
             <span style="grid-area: res" id="resultWrapper">
                 <span id="result"></span>
             </span>
