@@ -1,6 +1,6 @@
 # Chronicalc - a calculator
 
-The Chronicalc web app is a free advanced calculator that can be installed as a progressive web app on iOS and Android.
+The Chronicalc web app is a free advanced calculator that can be installed as a progressive web app on iOS and Android. The application can be accessed at [https://chronicweirdo.github.io/calculator/](https://chronicweirdo.github.io/calculator/)
 
 ## Features
 
