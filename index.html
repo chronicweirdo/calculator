@@ -17,6 +17,7 @@
         <link rel="icon" sizes="192x192" href="shortcut192.png">
         <link rel="apple-touch-icon" href="shortcut192.png">
         <script>
+            var HAS_RESULT_CLASS = "has_result"
             function getViewportWidth() {
                 return Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
             }
@@ -27,14 +28,25 @@
 
             function calculate(){
                 let eq = document.getElementById("equation")
+                let resultElement = document.getElementById("result")
+                resultElement.classList.remove(HAS_RESULT_CLASS)
                 try {
                     let expression = eq.value
                     let result = Function('"use strict";return (' + expression + ')')()
-                    document.getElementById("result").innerHTML = result
+                    resultElement.innerHTML = result
+                    resultElement.classList.add(HAS_RESULT_CLASS)
                 } catch (error) {
-                    document.getElementById("result").innerHTML = "?"
+                    let readmeUrl = "https://github.com/chronicweirdo/calculator"
+                    resultElement.innerHTML = ""
+                    resultElement.appendChild(createLink("?", readmeUrl))
                 }
                 eq.focus()
+            }
+            function createLink(title, url) {
+                let link = document.createElement("a")
+                link.href = url
+                link.innerHTML = title
+                return link
             }
             function insert(ch) {
                 let eq = document.getElementById("equation")
@@ -95,19 +107,21 @@
             }
             function memSave() {
                 let equation = document.getElementById("equation").value
-                let result = document.getElementById("result").innerHTML
+                let resultElement = document.getElementById("result")
+                let result = null
+                if (resultElement.classList.contains(HAS_RESULT_CLASS)) {
+                    result = resultElement.innerHTML
+                }
                 let date = new Date()
                 let name = dateToString(date)
-                if (result != "?") {
-                    // save this value
-                    let val = {
-                        eq: equation,
-                        res: result,
-                        name: name,
-                        ts: date.getTime()
-                    }
-                    window.localStorage.setItem(equation, JSON.stringify(val))
+                // save this value
+                let val = {
+                    eq: equation,
+                    res: result,
+                    name: name,
+                    ts: date.getTime()
                 }
+                window.localStorage.setItem(equation, JSON.stringify(val))
             }
             function but(text, func, cls) {
                 let b = document.createElement("button")
@@ -132,7 +146,7 @@
             function addRows(table, v) {
                 table.appendChild(getMemoryNameInput(v))
                 table.appendChild(but("x", () => memDelete(v.eq), "delete"))
-                if (v.eq != v.res) {
+                if (v.res != null && v.eq != v.res) {
                     table.appendChild(but(v.eq, () => {
                         hideMem()
                         insert(v.eq)
@@ -141,6 +155,13 @@
                         hideMem()
                         insert(v.res)
                     }, "operation"))
+                } else if (v.res != null) {
+                    let b = but(v.res, () => {
+                        hideMem()
+                        insert(v.res)
+                    }, "operation")
+                    b.style.gridColumn = "1/3"
+                    table.appendChild(b)
                 } else {
                     let b = but(v.eq, () => {
                         hideMem()
@@ -208,12 +229,12 @@
             }
             function equalsAction() {
                 calculate()
-                let result = document.getElementById("result").innerHTML
-                if (result == "?") {
-                    window.location.reload()
-                } else {
+                let result = document.getElementById("result")
+                if (result.classList.contains(HAS_RESULT_CLASS)) {
                     navigator.clipboard.writeText(document.getElementById("result").innerHTML)
                     document.getElementById("equation").focus()
+                } else {
+                    window.location.reload()
                 }
             }
             window.onload = function() {
