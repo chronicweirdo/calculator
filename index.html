@@ -168,7 +168,7 @@
                     let v = JSON.parse(window.localStorage.getItem(keys[k]))
                     items.push(v)
                 }
-                items.sort((a, b) => a.ts - b.ts)
+                items.sort((a, b) => a.name > b.name)
                 return items
             }
             function mem() {
