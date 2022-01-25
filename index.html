@@ -233,6 +233,7 @@
             function cls() {
                 let eq = document.getElementById("equation")
                 eq.value = ""
+                calculate()
                 eq.focus()
             }
             function resize() {
@@ -472,11 +473,11 @@
                 width: 100%;
                 position: relative;
                 overflow: hidden;
-                user-select: auto;
-                -webkit-user-select: auto;
-                -moz-user-select: auto;
-                -khtml-user-select: auto;
-                -ms-user-select: auto;
+                user-select: text;
+                -webkit-user-select: text;
+                -moz-user-select: text;
+                -khtml-user-select: text;
+                -ms-user-select: text;
             }
             #mem {
                 display: none;
