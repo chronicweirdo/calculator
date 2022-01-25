@@ -157,7 +157,7 @@
             function addRows(table, v) {
                 table.appendChild(getMemoryNameInput(v))
                 let deleteButton = but("x", null, "delete")
-                setupLongPress(deleteButton, () => memDelete(v.eq))
+                setupLongPress(deleteButton, null, () => memDelete(v.eq), [255, 255, 255])
                 table.appendChild(deleteButton)
                 //table.appendChild(but("x", () => memDelete(v.eq), "delete"))
                 if (v.res != null && v.eq != v.res) {
@@ -254,8 +254,15 @@
             window.onload = function() {
                 resize()
                 calculate()
-                setupLongPress(document.getElementById("button_cls"), cls)
-                setupLongPress(document.getElementById("button_memplus"), memSave)
+                let white = [255, 255, 255]
+                setupLongPress(document.getElementById("button_cls"), null, cls, white)
+                setupLongPress(document.getElementById("button_memplus"), null, memSave, white)
+                setupLongPress(document.getElementById("button_left"), left, () => {
+                    document.getElementById("controls").className = "left"
+                }, white)
+                setupLongPress(document.getElementById("button_right"), right, () => {
+                    document.getElementById("controls").className = "right"
+                }, white)
             }
             window.onresize = resize
             function decodeRgb(input) {
@@ -274,13 +281,13 @@
             function encodeRgb(r) {
                 return "rgb(" + r[0] + "," + r[1] + "," + r[2] + ")"
             }
-            function setupLongPress(element, action) {
+            function setupLongPress(element, shortPressAction, longPressAction, targetColor) {
                 let pressStartTimestamp = null
                 let pressCanceled = false
                 let pressActivateThreshold = 700
                 let pressCheckStep = 100
                 let originalBackgroundColor = null
-                let targetColor = [255, 255, 255]
+                //let targetColor = [255, 255, 255]
 
                 let startPress = function() {
                     if (pressStartTimestamp == null) {
@@ -294,7 +301,7 @@
                     } else {
                         let diff = +new Date() - pressStartTimestamp
                         if (diff >= pressActivateThreshold) {
-                            action()
+                            if (longPressAction) longPressAction()
                             pressStartTimestamp = null
                             pressCanceled = false
                             element.style.backgroundColor = encodeRgb(originalBackgroundColor)
@@ -307,6 +314,7 @@
                 }
                 let endPress = function() {
                     if (pressStartTimestamp != null) {
+                        if (shortPressAction) shortPressAction()
                         pressCanceled = true
                     }
                 }
@@ -389,7 +397,7 @@
 
             @media (orientation: landscape)
             {
-                #controls {
+                #controls.right {
                     grid-template-columns: 60% repeat(4, 10%);
                     grid-template-rows: repeat(7, auto);
                     grid-template-areas: 
@@ -400,6 +408,19 @@
                         'eqa b4 b5 b6 mul'
                         'eqa b1 b2 b3 min'
                         'eqa b0 b0 pt pls'
+                        ;
+                }
+                #controls.left {
+                    grid-template-columns: repeat(4, 10%) 60%;
+                    grid-template-rows: repeat(7, auto);
+                    grid-template-areas: 
+                        'equ res res res eqa'
+                        'cls lef rig mps eqa'
+                        'bsp pop pcl mem eqa'
+                        'b7 b8 b9 div eqa'
+                        'b4 b5 b6 mul eqa'
+                        'b1 b2 b3 min eqa'
+                        'b0 b0 pt pls eqa'
                         ;
                 }
             }
@@ -446,7 +467,7 @@
         </style>
     </head>
     <body>
-        <div id="controls">
+        <div id="controls" class="right">
             <textarea style="grid-area: eqa" id="equation" name="equation" inputmode="none" onchange="calculate()" onkeyup="calculate()" onfocus="calculate()"></textarea>
 
             <button style="grid-area: equ" id="equals" onclick="equalsAction()">=</button>
@@ -474,8 +495,8 @@
             <button style="grid-area: bsp" class="delete" type="button" onclick="backspace()">&lt;&lt;&lt;</button>
             <button style="grid-area: cls" class="delete" type="button" id="button_cls">C</button>
 
-            <button style="grid-area: lef" type="button" onclick="left()">&lt;</button>
-            <button style="grid-area: rig" type="button" onclick="right()">&gt;</button>
+            <button style="grid-area: lef" type="button" id="button_left">&lt;</button>
+            <button style="grid-area: rig" type="button" id="button_right">&gt;</button>
             <button style="grid-area: mps" class="memory" type="button" id="button_memplus">M+</button>
             <button style="grid-area: mem" class="memory" type="button" onclick="mem()">M&nbsp;</button>
         </div>
