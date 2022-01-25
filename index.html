@@ -19,6 +19,7 @@
         <script>
             var ALLOWED_CHARACTERS
             var HAS_RESULT_CLASS = "has_result"
+            var APP_MODE = "app_mode"
             function getViewportWidth() {
                 return Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
             }
@@ -200,8 +201,11 @@
                 let keys = Object.keys(window.localStorage)
                 let items = []
                 for (k in keys) {
-                    let v = JSON.parse(window.localStorage.getItem(keys[k]))
-                    items.push(v)
+                    if (keys[k] != APP_MODE) {
+                        console.log(k)
+                        let v = JSON.parse(window.localStorage.getItem(keys[k]))
+                        items.push(v)
+                    }
                 }
                 items.sort((a, b) => a.name > b.name)
                 return items
@@ -252,15 +256,20 @@
                 }
             }
             window.onload = function() {
+                if (window.localStorage[APP_MODE]) {
+                    document.getElementById("controls").className = window.localStorage[APP_MODE]
+                }
                 resize()
                 calculate()
                 let white = [255, 255, 255]
                 setupLongPress(document.getElementById("button_cls"), null, cls, white)
                 setupLongPress(document.getElementById("button_memplus"), null, memSave, white)
                 setupLongPress(document.getElementById("button_left"), left, () => {
+                    window.localStorage.setItem(APP_MODE, "left")
                     document.getElementById("controls").className = "left"
                 }, white)
                 setupLongPress(document.getElementById("button_right"), right, () => {
+                    window.localStorage.setItem(APP_MODE, "right")
                     document.getElementById("controls").className = "right"
                 }, white)
             }
@@ -397,7 +406,7 @@
 
             @media (orientation: landscape)
             {
-                #controls.right {
+                #controls {
                     grid-template-columns: 60% repeat(4, 10%);
                     grid-template-rows: repeat(7, auto);
                     grid-template-areas: 
@@ -467,7 +476,7 @@
         </style>
     </head>
     <body>
-        <div id="controls" class="right">
+        <div id="controls">
             <textarea style="grid-area: eqa" id="equation" name="equation" inputmode="none" onchange="calculate()" onkeyup="calculate()" onfocus="calculate()"></textarea>
 
             <button style="grid-area: equ" id="equals" onclick="equalsAction()">=</button>
