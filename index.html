@@ -357,18 +357,18 @@
                 padding: 0;
                 margin: 0;
                 touch-action: manipulation;
-                pointer-events: none;
+                /*pointer-events: none;*/
             }
             *:focus {
                 outline: none;
             }
-            button {
-                user-select: none; /* standard syntax */
-                -webkit-user-select: none; /* webkit (safari, chrome) browsers */
-                -moz-user-select: none; /* mozilla browsers */
-                -khtml-user-select: none; /* webkit (konqueror) browsers */
-                -ms-user-select: none; /* IE10+ */
-            }
+            /*button {
+                user-select: none; 
+                -webkit-user-select: none; 
+                -moz-user-select: none;
+                -khtml-user-select: none;
+                -ms-user-select: none; 
+            }*/
             
             @media (prefers-color-scheme: light) {
                 body {
@@ -474,6 +474,15 @@
                 width: 100%;
                 position: relative;
                 overflow: hidden;
+                /*-webkit-touch-callout: default;
+                -webkit-user-select: text;
+                -khtml-user-select: text;
+                -moz-user-select: text;
+                -ms-user-select: text;
+                -o-user-select: text;
+                user-select: text;*/
+            }
+            /*#resultWrapper {
                 -webkit-touch-callout: default;
                 -webkit-user-select: text;
                 -khtml-user-select: text;
@@ -481,16 +490,7 @@
                 -ms-user-select: text;
                 -o-user-select: text;
                 user-select: text;
-            }
-            #resultWrapper {
-                -webkit-touch-callout: default;
-                -webkit-user-select: text;
-                -khtml-user-select: text;
-                -moz-user-select: text;
-                -ms-user-select: text;
-                -o-user-select: text;
-                user-select: text;
-            }
+            }*/
             #mem {
                 display: none;
                 word-break: break-all;
