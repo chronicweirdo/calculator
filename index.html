@@ -290,7 +290,14 @@
             function encodeRgb(r) {
                 return "rgb(" + r[0] + "," + r[1] + "," + r[2] + ")"
             }
+            function isTouchEnabled() {
+                /*return ('ontouchstart' in window) ||
+                    (navigator.maxTouchPoints > 0) ||
+                    (navigator.msMaxTouchPoints > 0)*/
+                return window.matchMedia("(pointer: coarse)").matches
+            }
             function setupLongPress(element, shortPressAction, longPressAction, targetColor) {
+                element.onclick = null
                 let pressStartTimestamp = null
                 let pressCanceled = false
                 let pressActivateThreshold = 700
@@ -298,7 +305,11 @@
                 let originalBackgroundColor = null
                 //let targetColor = [255, 255, 255]
 
-                let startPress = function() {
+                let startPress = function(event) {
+                    if (event) {
+                        event.preventDefault()
+                        console.log(event)
+                    }
                     if (pressStartTimestamp == null) {
                         pressStartTimestamp = +new Date()
                         originalBackgroundColor = decodeRgb(window.getComputedStyle(element, null).getPropertyValue('background-color'))
@@ -307,6 +318,7 @@
                         pressStartTimestamp = null
                         pressCanceled = false
                         element.style.backgroundColor = encodeRgb(originalBackgroundColor)
+                        return false
                     } else {
                         let diff = +new Date() - pressStartTimestamp
                         if (diff >= pressActivateThreshold) {
@@ -314,6 +326,7 @@
                             pressStartTimestamp = null
                             pressCanceled = false
                             element.style.backgroundColor = encodeRgb(originalBackgroundColor)
+                            return false
                         } else {
                             let newColor = transitionRgb(originalBackgroundColor, targetColor, diff/pressActivateThreshold)
                             element.style.backgroundColor = encodeRgb(newColor)
@@ -321,15 +334,24 @@
                         }
                     }
                 }
-                let endPress = function() {
+                let endPress = function(event) {
+                    if (event) {
+                        event.preventDefault()
+                        console.log(event)
+                    }
+                    console.log("end press")
                     if (pressStartTimestamp != null) {
                         if (shortPressAction) shortPressAction()
                         pressCanceled = true
                     }
                 }
-
-                element.addEventListener("mousedown", startPress, false)
-                element.addEventListener("mouseup", endPress, false)
+                /*if (isTouchEnabled()) {*/
+                    element.addEventListener("touchstart", startPress, false)
+                    element.addEventListener("touchend", endPress, false)
+                /*} else {*/
+                    element.addEventListener("mousedown", startPress, false)
+                    element.addEventListener("mouseup", endPress, false)
+                //}
             }
         </script>
         <style>
@@ -341,6 +363,13 @@
             }
             *:focus {
                 outline: none;
+            }
+            button {
+                user-select: none; /* standard syntax */
+                -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+                -moz-user-select: none; /* mozilla browsers */
+                -khtml-user-select: none; /* webkit (konqueror) browsers */
+                -ms-user-select: none; /* IE10+ */
             }
             
             @media (prefers-color-scheme: light) {
