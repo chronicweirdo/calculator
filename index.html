@@ -202,7 +202,6 @@
                 let items = []
                 for (k in keys) {
                     if (keys[k] != APP_MODE) {
-                        console.log(k)
                         let v = JSON.parse(window.localStorage.getItem(keys[k]))
                         items.push(v)
                     }
@@ -300,7 +299,7 @@
                 element.onclick = null
                 let pressStartTimestamp = null
                 let pressCanceled = false
-                let pressActivateThreshold = 700
+                let pressActivateThreshold = 400
                 let pressCheckStep = 100
                 let originalBackgroundColor = null
                 //let targetColor = [255, 255, 255]
@@ -308,7 +307,6 @@
                 let startPress = function(event) {
                     if (event) {
                         event.preventDefault()
-                        console.log(event)
                     }
                     if (pressStartTimestamp == null) {
                         pressStartTimestamp = +new Date()
@@ -337,9 +335,7 @@
                 let endPress = function(event) {
                     if (event) {
                         event.preventDefault()
-                        console.log(event)
                     }
-                    console.log("end press")
                     if (pressStartTimestamp != null) {
                         if (shortPressAction) shortPressAction()
                         pressCanceled = true
