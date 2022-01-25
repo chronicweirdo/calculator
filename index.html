@@ -137,7 +137,7 @@
             function but(text, func, cls) {
                 let b = document.createElement("button")
                 b.innerHTML = text
-                b.onclick = func
+                if (func) b.onclick = func
                 if (cls) {
                     b.classList.add(cls)
                 }
@@ -156,7 +156,10 @@
             }
             function addRows(table, v) {
                 table.appendChild(getMemoryNameInput(v))
-                table.appendChild(but("x", () => memDelete(v.eq), "delete"))
+                let deleteButton = but("x", null, "delete")
+                setupLongPress(deleteButton, () => memDelete(v.eq))
+                table.appendChild(deleteButton)
+                //table.appendChild(but("x", () => memDelete(v.eq), "delete"))
                 if (v.res != null && v.eq != v.res) {
                     table.appendChild(but(v.eq, () => {
                         hideMem()
@@ -251,8 +254,66 @@
             window.onload = function() {
                 resize()
                 calculate()
+                setupLongPress(document.getElementById("button_cls"), cls)
+                setupLongPress(document.getElementById("button_memplus"), memSave)
             }
             window.onresize = resize
+            function decodeRgb(input) {
+                m = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i)
+                if(m) {
+                    return [parseInt(m[1]),parseInt(m[2]),parseInt(m[3])]
+                }
+            }
+            function transitionRgb(rgb1, rgb2, ratio) {
+                r = []
+                r[0] = Math.floor(rgb1[0] + (rgb2[0] - rgb1[0]) * ratio)
+                r[1] = Math.floor(rgb1[1] + (rgb2[1] - rgb1[1]) * ratio)
+                r[2] = Math.floor(rgb1[2] + (rgb2[2] - rgb1[2]) * ratio)
+                return r
+            }
+            function encodeRgb(r) {
+                return "rgb(" + r[0] + "," + r[1] + "," + r[2] + ")"
+            }
+            function setupLongPress(element, action) {
+                let pressStartTimestamp = null
+                let pressCanceled = false
+                let pressActivateThreshold = 700
+                let pressCheckStep = 100
+                let originalBackgroundColor = null
+                let targetColor = [255, 255, 255]
+
+                let startPress = function() {
+                    if (pressStartTimestamp == null) {
+                        pressStartTimestamp = +new Date()
+                        originalBackgroundColor = decodeRgb(window.getComputedStyle(element, null).getPropertyValue('background-color'))
+                    }
+                    if (pressCanceled) {
+                        pressStartTimestamp = null
+                        pressCanceled = false
+                        element.style.backgroundColor = encodeRgb(originalBackgroundColor)
+                    } else {
+                        let diff = +new Date() - pressStartTimestamp
+                        if (diff >= pressActivateThreshold) {
+                            action()
+                            pressStartTimestamp = null
+                            pressCanceled = false
+                            element.style.backgroundColor = encodeRgb(originalBackgroundColor)
+                        } else {
+                            let newColor = transitionRgb(originalBackgroundColor, targetColor, diff/pressActivateThreshold)
+                            element.style.backgroundColor = encodeRgb(newColor)
+                            setTimeout(startPress, pressCheckStep)
+                        }
+                    }
+                }
+                let endPress = function() {
+                    if (pressStartTimestamp != null) {
+                        pressCanceled = true
+                    }
+                }
+
+                element.addEventListener("mousedown", startPress, false)
+                element.addEventListener("mouseup", endPress, false)
+            }
         </script>
         <style>
             * {
@@ -411,11 +472,11 @@
             <button style="grid-area: pop" type="button" onclick="insert('(')">(</button>
             <button style="grid-area: pcl" type="button" onclick="insert(')')">)</button>
             <button style="grid-area: bsp" class="delete" type="button" onclick="backspace()">&lt;&lt;&lt;</button>
-            <button style="grid-area: cls" class="delete" type="button" onclick="cls()">C</button>
+            <button style="grid-area: cls" class="delete" type="button" id="button_cls">C</button>
 
             <button style="grid-area: lef" type="button" onclick="left()">&lt;</button>
             <button style="grid-area: rig" type="button" onclick="right()">&gt;</button>
-            <button style="grid-area: mps" class="memory" type="button" onclick="memSave()">M+</button>
+            <button style="grid-area: mps" class="memory" type="button" id="button_memplus">M+</button>
             <button style="grid-area: mem" class="memory" type="button" onclick="mem()">M&nbsp;</button>
         </div>
         <div id="mem">
