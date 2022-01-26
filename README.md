@@ -11,8 +11,11 @@ The Chronicalc web app is a free advanced calculator that can be installed as a 
 - when no valid expression is on screen, the result area displays a "?" mark; clicking on this mark will take you to this readme page
 - when no valid expression is written on screen, and the result field display a "?" mark, clicking on "=" will refresh the page
 - when a valid expression is written on screen, and a number is displayed in the result field, clicking on "=" will copy the result to clipboard
-- clicking on "M+" will save the current expression and result to memory
+- to delete the entire expression you must use a long press on the C button
+- a long press on "M+" will save the current expression and result to memory
 - clicking on "M" will open the memory screen
+- the "<" and ">" buttons can be used to move the caret inside the expression input element
+- when in landscape mode, a long press of either the "<" or ">" will move the input controls to the left or the right side of the screen, allowing use of the app with either the left or the right hand; this setting is memorized for the next time you open the app in landscape mode
 
 ### On the memory screen
 
